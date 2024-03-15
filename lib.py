@@ -3,7 +3,6 @@ import numpy as np
 # !/usr/bin/env python
 import numpy as np
 
-
 class TileCoder:
   def __init__(self, tilings, tiles, value_limits,
                offset=lambda n: 2 * np.arange(n) + 1):
