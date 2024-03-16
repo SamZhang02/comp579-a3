@@ -1,8 +1,11 @@
 \documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\usepackage{graphicx}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{amsmath}
+
 \graphicspath{{./assets/}} % Specifies the directory where images are stored
 
-\title{Assignment 3}
+\title{COMP579: Assignment 3}
 \author{Jacqueline Wu, Sam Zhang}
 \date{March 2024}
 
@@ -11,23 +14,72 @@
 \maketitle
 
 \section{Value-based method with linear function approximation}
-We implement Q-Learning and Expected SARSA and experiment them with two environments from the Gymnasium, an open-source fork of the OpenAI Gym. \cite{gymnasium}
+We implement Q-Learning and Expected SARSA and experiment them with in two environments from the Gymnasium, an open-source fork of the OpenAI Gym. \cite{gymnasium}
 During the experiment, the environment's states are discretized through tile-coding into a binary vector.
 
+\subsection{Methodologies}
+We experiment with a fixed set of 3 different learning rates $\alpha \in \{ \frac{1}{4}, \frac{1}{8}, \frac{1}{16} \}$.
+For each learning rate, we also experiment with 3 different $\epsilon$, where one 1 is an
+exponentially decaying $\epsilon$ and the other 2 are fixed. We use decaying $\epsilon$ to
+gauge the effect of encouraging exploration in the early stages of learning
+and eliminating it in the later stages.
+
+For each learning rate, we divide them by the number of tilings to avoid integer overflow during
+the experiment.
+
 \subsection{Results}
-We experiment with 3 $\epsilon$ per algorithm-environment pair, and use a fixed set of 3 different learning rates $\alpha \in \{ \frac{1}{4}, \frac{1}{8}, \frac{1}{16} \}$. The results are shown in Figure \ref{fig:q1}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.33]{q1.png}
+    \includegraphics[scale=0.35]{q1.png}
     \caption{ExpectedSARSA and Q-Learning's Performances on CartPole-v1 and MountainCar-v0}
     \label{fig:q1}
 \end{figure}
 
-\subsection{Discussion}
+The results of the experiments are shown in Figure \ref{fig:q1}, the values of $\alpha$ are
+written post-division by the number of tilings.
 
+we observe that linear approximation in general learns CartPool-v1 poorly, and stops learning
+early on, achieving rewards of sub-$30$. This is the case for both Algorithms and a wide range of
+hyperparameter combinations. Out of all combinations, the best-performing combination for both
+algorithms is $\alpha = \frac{1/16}{\text{number of tilings}}, \epsilon = 0.25$, where learning
+happened the fastest and remained the most stable.
+
+Both algorithms performed better on MountainCar-v0, with the best performing ExpectedSARSA achieving consistent rewards of
+reward $\approx -150$, and Q-Learning achieving reward $\approx -130$. The best performing hyperparameters
+combination for both algorithms is $\alpha = \frac{1/4}{\text{number of tilings}}, \epsilon = 1\times
+0.995^{\text{episode}}$.
+
+\subsection{Discussion}
+We begin by highlighting the poor performance of linear approximation on CartPole-v1. This is
+the case for both algorithms and a wide range of hyperparameter combinations; no algorithm
+stood out as being particularly better than the other.
+potentially due to the 4-dimensional state space being too complex for a linear approximation to capture.
+The results do show a few characteristics with different hyperparameters, such as better stability with a
+lower learning rate, and decaying $\epsilon$ preventing the model from learning at all, but
+the takeaways are limited because this is not based on a great performance,
+future experiments with more episodes, a different RL algorithm, or non-linear function approximation
+may be suitable to attempt to achieve better results.
+
+For MountainCar-v0, both algorithms performed better, with obvious patterns of learning and
+stabilization, suggesting that linear function approximation is suitable.
+Out of the two algorithms, the Q-Learning algorithm performed better than ExpectedSARSA in average reward.
+This may imply that the environment is better suited for off-policy learning, potentially
+because the risk of negative outcomes in the environment is not high.
+
+It is also worth noting that a decaying $\epsilon$ performed noticeably better than fixed $\epsilon$
+for the specific environment + Q-Learning combination, suggesting that encouraging exploration
+in the early stages of learning may have led the model to establish a good understanding of the
+optimal actions and their rewards, and then exploit this knowledge when exploration is
+eliminated.
+
+Apart from the algorithms and the hyperparameters, the two environments have shown some
+contrasting differences as well. Decaying $\epsilon$ did not work at all for CartPole, whereas
+it worked best in MountainCar. Cartpole performed best with a smaller learning rate, and
+MountainCar performed best on its largest learning rate.
 
 \section{Policy Gradient Theorem}
+
 
 \section{Policy-based methods with linear function approximation}
 
