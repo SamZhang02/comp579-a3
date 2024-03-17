@@ -2,6 +2,9 @@
 \usepackage{graphicx}
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\grad}{\nabla}
 
 \graphicspath{{./assets/}} % Specifies the directory where images are stored
 
@@ -85,8 +88,39 @@ that may require more careful and refined learning that we were unable to achiev
 
 The gradient policy theorem states that
 \[
-\nabla_\theta J(\theta) = \mathbb{E}_{\pi} \left[ \nabla_{\theta} \log \pi_{\theta}(s, a) \cdot G_t \right]
-\]
+\begin{align*}
+  \nabla_z J(\pi) &= \mathbb{E}_{\pi} \left [ \nabla_{z} \log \pi_{z}(s, a) \cdot A^{\pi}(s,a) \right]\\
+          &= \mathbb{E}_{\pi} \left [\sum_{t=0}^\infty \nabla_{z} \log \pi_{z}(s_t, a_t) \cdot A^{\pi}(s_t,a_t) \right]
+\end{align*}
+
+Since $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s,a)$ where $V^\pi(s,a)$ is chosen as the baseline.
+
+We begin by looking at the gradient of the log policy function; consider some arbitrary $s' \in
+\mathcal{S}, a' \in \mathcal{A}$:
+
+\begin{align*}
+  \frac{\partial\log \pi(s,a)}{\partial z(s', a')} &= \nabla_{z(s', a')}\left[(z(s,a) - \log \sum_{a'\in A} \exp(z(s,a'))) \right]\\
+                          &= \nabla_{z(s', a')}(z(s,a) - \nabla_{z} \log \sum_{a'\in A} \exp(z(s,a')))\\
+                          &= \nabla_{z(s', a')}(z(s,a) - \nabla_{z} \log \sum_{a'\in A} \exp(z(s,a')))\\
+                          &= \mathbb{I}(s' = s) \left [ \mathbb{I}(a' = a) - \frac{\exp z(s,a)}{\sum_{a'\in \mathcal{A}} \exp z(s,a')}\right ]\\
+                          &= \mathbb{I}(s' = s) \left [\mathbb{I}(a' = a) - \pi (s,a) \right]
+\end{align*}
+
+We then use this in the policy gradient theorem, for some trajectory $\tau$:
+
+\begin{align*}
+  \grad_z J(\pi) &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[ s_t = s] \left ( \mathbb{I}[a_t = a] A^{\pi}(s,a) - \pi_\theta(a|s)A^{\pi} (s_t, a_t) \right) \right]\\
+                 &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right] - \mathbb{E}_\pi \left [ \sum _{t=0}^{\infty} \mathbb{I} [s_t = s] A^{\pi} (s_t, a_t)\right]\\
+                 &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right] - \pi_\theta(a|s) \sum_{t=0}^\infty \mathbb{E_\pi} [\mathbb{I}[s_t = s] A^\pi (s_t, a_t)]\\
+                 &\text{because the expected advantage is 0}\\
+                 &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right] - 0 \\
+                 &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right]\\
+                 &= \mathbb{E}_{s' \sim d^\pi} \mathbb{E}_{a' \sim \pi(\cdot | s)} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right]\\
+                 &= d^\pi(s) \pi(a|s) A^\pi(s,a)
+\end{align*}
+
+
+
 
 
 
