@@ -85,7 +85,7 @@ that may require more careful and refined learning that we were unable to achiev
 
 The gradient policy theorem states that
 \[
-  \nabla_\theta J(\theta) = \mathbb{E}_{\pi} \left[ \nabla_{\theta} \log \pi_{\theta}(s, a) \cdot G_t \right]
+\nabla_\theta J(\theta) = \mathbb{E}_{\pi} \left[ \nabla_{\theta} \log \pi_{\theta}(s, a) \cdot G_t \right]
 \]
 
 
@@ -101,7 +101,7 @@ The gradient policy theorem states that
 \subsection{Methodologies}
 
 Experimental methodologies were similar to Question 1, but we select a single learning rate per
-algorithm and environment. For each algorithm and environment, we experiment with a static temperature and a
+algorithm and environment. For each algorithm (REINFORCE with baseline and ActorCritic) and environment, we experiment with a static temperature and a
 exponentially decreasing temperature.
 
 Learning rates for this question are not divided by the number of tilings, since we were not
