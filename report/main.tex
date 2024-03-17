@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{article in the early stages}
 \usepackage{graphicx}
 \usepackage[a4paper, total={6in, 8in}]{geometry}
 \usepackage{amsmath}
@@ -15,7 +15,7 @@
 
 \section{Value-based method with linear function approximation}
 We implement Q-Learning and Expected SARSA and experiment them with in two environments from the Gymnasium, an open-source fork of the OpenAI Gym. \cite{gymnasium}
-During the experiment, the environment's states are discretized through tile-coding into a binary vector.
+During the experiment, the environment's states are discretized through tile-coding into a binary vector, with a randomized offset for each tile.
 
 \subsection{Methodologies}
 We experiment with a fixed set of 3 different learning rates $\alpha \in \{ \frac{1}{4}, \frac{1}{8}, \frac{1}{16} \}$.
@@ -31,7 +31,7 @@ the experiment.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[scale=0.35]{q1.png}
+    \includegraphics[scale=0.37]{q1.png}
     \caption{ExpectedSARSA and Q-Learning's Performances on CartPole-v1 and MountainCar-v0}
     \label{fig:q1}
 \end{figure}
@@ -70,15 +70,31 @@ because the risk of negative outcomes in the environment is not high.
 It is also worth noting that a decaying $\epsilon$ performed noticeably better than fixed $\epsilon$
 for the specific environment + Q-Learning combination, suggesting that encouraging exploration
 in the early stages of learning may have led the model to establish a good understanding of the
-optimal actions and their rewards, and then exploit this knowledge when exploration is
-eliminated.
+optimal actions and their rewards, and then exploit this knowledge through learning towards that
+opmtimal action via Q-Learning.
 
+\subsubsection{Differences in Environments}
 Apart from the algorithms and the hyperparameters, the two environments have shown some
 contrasting differences as well. Decaying $\epsilon$ did not work at all for CartPole, whereas
 it worked best in MountainCar. Cartpole performed best with a smaller learning rate, and
-MountainCar performed best on its largest learning rate.
+MountainCar performed best on its largest learning rate. These differences may stem from the
+difference in complexity of the two environments; MountainCar is only a two-dimensional environment
+that might see advantages in learning more abrubtly with large learning rates, Q-Learning, and large epsilons early, whereas CartPole is a four-dimensional environment
+that may require more careful and refined learning that we were unable to achieve.
 
 \section{Policy Gradient Theorem}
+
+The gradient policy theorem states that
+\[
+  \nabla_\theta J(\theta) = \mathbb{E}_{\pi} \left[ \nabla_{\theta} \log \pi_{\theta}(s, a) \cdot G_t \right]
+\]
+
+
+
+
+
+
+
 
 
 \section{Policy-based methods with linear function approximation}
@@ -86,6 +102,40 @@ MountainCar performed best on its largest learning rate.
 \subsection{Results}
 
 \subsection{Discussion}
+
+
+\subsubsection{Non-Linearity of CartPole-v1}
+
+Through the results in this section and Question 1, we observe that linear approximation
+for the CartPole-v1 environment has performed poorly all across the board. At best, we have been
+able to do some learning in the early episodes using a few algorithms, but all stabilized
+sub-100 rewards. This is a likely indication that the environment is too complex for a linear
+approximation, particularly on states at a later stage of the game.
+
+With these in mind, we conclude that linear approximation is not sub-optimal
+for the CartPole-v1 environment. Future experiments with non-linear function approximation
+may be suitable to attempt to achieve better results.
+
+\subsubsection{Monte-Carlo Methods and MountainCar-v0}
+We notice a severely poor performance of the Monte-Carlo method on MountainCar-v0,
+despite achievements of decent rewards in the other methods of similar linear approximation. The method required
+significantly more tuning and fine adjustments based on the nature of the environment,
+such as a specific decreasing temperature algorithm.
+
+This is unsurprising, notice that the environment's reward system state that
+for each step that the car is not at the flag, the environment returns a reward of -1.
+Given that Monte Carlo methods learned through an entire trajectory, a truncated
+episode would result in a reward that provide little to no information about a good path to
+reach the terminal state. Intuitively, a decreasing temperature would be helpful
+for the model to reach the terminal state, and then learn from early success runs.
+But in practice, this has been extremely difficult to achieve, and the model has failed to learn
+a policy to reach the terminal state.
+
+Overall, with the positive results on other algorithms and the extra attention needed to tune the
+REINFORCE algorithm, we conclude that Monte-Carlo variations are not desired for the MountainCar-v0 environment.
+If we were to continue with the REINFORCE algorithm, we would need to experiment with larger
+compute, notably with higher episodes and higher steps before truncation to successfully capture
+a good amount of successful trajectories in the early stages.
 
 \newpage
 \bibliography{ref}{}
