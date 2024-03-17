@@ -39,7 +39,7 @@ the experiment.
 The results of the experiments are shown in Figure \ref{fig:q1}, the values of $\alpha$ are
 written post-division by the number of tilings.
 
-we observe that both experiments learned CartPool-v1 poorly, and stops learning
+We observe that both experiments learned CartPool-v1 poorly, and stops learning
 early on, achieving rewards of sub-$30$. Out of all combinations, the best-performing combination for both
 algorithms is $\alpha = \frac{1/16}{\text{number of tilings}}, \epsilon = 0.25$, where learning
 happened the fastest and remained the most stable.
@@ -129,13 +129,12 @@ achieving a mean reward of $\approx -500$. ActorCritic performed better, achievi
 results as the best performing value-based method, with a mean reward of $\approx -130$.
 
 \subsection{Discussion}
-Overall, policy-based methods did not performed significantly better than value-based methods,
+Overall, policy-based methods did not perform significantly better than value-based methods,
 with a minor exception on CartPole-v1 and REINFORCE showing a slight higher mean reward than
 all other methods.
 
 We highlight a few points of the environments observed in the results: notably, the non-linearity of
-cartpole-v1 and the difficulty in learning the mountaincar-v0 environment with Monte-Carlo variants.
-We observe that linear approximation
+Cartpole-v1 and the difficulty in learning the Mountaincar-v0 environment with Monte-Carlo variants.
 
 \subsubsection{Non-Linearity of CartPole-v1}
 
@@ -144,10 +143,10 @@ for the CartPole-v1 environment has performed poorly all across the board, wheth
 is value-based or policy-based. At best, we have been
 able to achieve some learning in the early episodes using a few algorithms, but all algorithms
 stabilized at sub-100 rewards, which is considered low given that the problem is considered solved at reward=190\cite{gym}.
-This is a likely indication that the environment is too complex for a linear
+This is likely an indication that the environment is too complex for a linear
 approximation, particularly on states indicating a later part of the game.
 
-One usefuly observation is that the REINFORCE algorithm, performed marginally better
+One useful observation is that the REINFORCE algorithm, performed marginally better
 than Actor-Critic, and methods from Q1 in the CartPole-v1 environment.
 This performance edge could likely be attributed to REINFORCE's strategy of learning from complete trajectories,
 allowing it to accumulate comprehensive experience from each episode.
@@ -176,8 +175,8 @@ a policy to reach the terminal state.
 
 Overall, with the positive results on other algorithms and the extra attention needed to tune the
 REINFORCE algorithm, we conclude that Monte-Carlo variations are not desired for the MountainCar-v0 environment.
-If we were to continue with the REINFORCE algorithm, experiments with larger
-compute, notably with higher episodes and higher steps before truncation to successfully capture
+If we were to continue with the REINFORCE algorithm, experimenting with larger
+computations, notably with higher episodes and higher steps before truncation in order to successfully capture
 a good amount of successful trajectories in the early stages would be helpful.
 
 \newpage
