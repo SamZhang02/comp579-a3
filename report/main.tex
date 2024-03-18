@@ -86,16 +86,16 @@ that may require more careful and refined learning that we were unable to achiev
 
 \section{Policy Gradient Theorem}
 
-The gradient policy theorem states that
-\[
+From the gradient policy theorem (with $\gamma$ = 1), we have
+
 \begin{align*}
   \nabla_z J(\pi) &= \mathbb{E}_{\pi} \left [ \nabla_{z} \log \pi_{z}(s, a) \cdot A^{\pi}(s,a) \right]\\
           &= \mathbb{E}_{\pi} \left [\sum_{t=0}^\infty \nabla_{z} \log \pi_{z}(s_t, a_t) \cdot A^{\pi}(s_t,a_t) \right]
 \end{align*}
 
-Since $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s,a)$ where $V^\pi(s,a)$ is chosen as the baseline.
+Since $A^\pi(s,a) = Q^\pi(s,a) - V^\pi(s,a)$, and we choose $V^\pi(s,a)$ to be the baseline.
 
-We begin by looking at the gradient of the log policy function; consider some arbitrary $s' \in
+We begin with the gradient of the log policy function; consider some arbitrary $s' \in
 \mathcal{S}, a' \in \mathcal{A}$:
 
 \begin{align*}
@@ -106,7 +106,7 @@ We begin by looking at the gradient of the log policy function; consider some ar
                           &= \mathbb{I}(s' = s) \left [\mathbb{I}(a' = a) - \pi (s,a) \right]
 \end{align*}
 
-We then use this in the policy gradient theorem, for some trajectory $\tau$:
+We then use this in the policy gradient theorem:
 
 \begin{align*}
   \grad_z J(\pi) &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[ s_t = s] \left ( \mathbb{I}[a_t = a] A^{\pi}(s,a) - \pi_\theta(a|s)A^{\pi} (s_t, a_t) \right) \right]\\
@@ -116,7 +116,7 @@ We then use this in the policy gradient theorem, for some trajectory $\tau$:
                  &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right] - 0 \\
                  &= \mathbb{E_\pi} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right]\\
                  &= \mathbb{E}_{s' \sim d^\pi} \mathbb{E}_{a' \sim \pi(\cdot | s)} \left [ \sum_{t=0}^\infty \mathbb{I}[s_t, a_t = s, a] A^\pi (s,a) \right]\\
-                 &= d^\pi(s) \pi(a|s) A^\pi(s,a)
+                 &= d^\pi(s) \pi(a|s) A^\pi(s,a) &\square
 \end{align*}
 
 
