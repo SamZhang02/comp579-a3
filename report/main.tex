@@ -17,7 +17,7 @@
 \maketitle
 
 \section{Value-based method with linear function approximation}
-We implement Q-Learning and Expected SARSA and experiment them with in two environments from the Gymnasium, an open-source fork of the OpenAI Gym.\cite{gymnasium}
+We implement Q-Learning and Expected SARSA and experiment them within two environments from the Gymnasium, an open-source fork of the OpenAI Gym.\cite{gymnasium}
 During the experiment, the environment's states are discretized through tile-coding into a binary vector, with a randomized offset for each tile.
 
 \subsection{Methodologies}
@@ -39,10 +39,10 @@ the experiment.
     \label{fig:q1}
 \end{figure}
 
-The results of the experiments are shown in Figure \ref{fig:q1}, the values of $\alpha$ are
-written post-division by the number of tilings.
+The results of the experiments are shown in Figure \ref{fig:q1},  each with their tile coding
+parameters and their values of $\alpha$ are post-division by the number of tilings.
 
-We observe that both experiments learned CartPool-v1 poorly, and stops learning
+We observe that both experiments learned CartPool-v1 poorly, and stopped learning
 early on, achieving rewards of sub-$30$. Out of all combinations, the best-performing combination for both
 algorithms is $\alpha = \frac{1/16}{\text{number of tilings}}, \epsilon = 0.25$, where learning
 happened the fastest and remained the most stable.
@@ -72,16 +72,16 @@ because the risk of negative outcomes in the environment is not high.
 It is also worth noting that a decaying $\epsilon$ performed noticeably better than fixed $\epsilon$
 for the specific environment + Q-Learning combination, suggesting that encouraging exploration
 in the early stages of learning may have led the model to establish a good understanding of the
-optimal actions and their rewards, and then exploit this knowledge through learning towards that
+optimal actions and their rewards, and then exploit this knowledge through learning toward that
 optimal action via Q-Learning.
 
 \subsubsection{Differences in Environments}
 Apart from the algorithms and the hyperparameters, the two environments have shown some
-contrasting differences as well. Decaying $\epsilon$ did not work at all for CartPole, whereas
+contrasting differences. Decaying $\epsilon$ did not work at all for CartPole, whereas
 it worked best in MountainCar. Cartpole performed best with a smaller learning rate, and
 MountainCar performed best on its largest learning rate. These differences may stem from the
 difference in complexity of the two environments; MountainCar is only a two-dimensional environment
-that might see advantages in learning more abrubtly with large learning rates, Q-Learning, and large epsilons early, whereas CartPole is a four-dimensional environment
+that might see advantages in learning more abruptly with large learning rates, Q-Learning, and large epsilons early, whereas CartPole is a four-dimensional environment
 that may require more careful and refined learning that we were unable to achieve.
 
 \section{Policy Gradient Theorem}
@@ -119,23 +119,12 @@ We then use this in the policy gradient theorem:
                  &= d^\pi(s) \pi(a|s) A^\pi(s,a) &\square
 \end{align*}
 
-
-
-
-
-
-
-
-
-
-
-
 \section{Policy-based methods with linear function approximation}
 
 \subsection{Methodologies}
 
-Experimental methodologies were similar to Question 1, but we select a single learning rate per
-algorithm and environment. For each algorithm (REINFORCE with baseline and ActorCritic) and environment, we experiment with a static temperature and a
+Experimental methodologies were similar to Question 1, but we selected a single learning rate per
+algorithm and environment. For each algorithm (REINFORCE with baseline and ActorCritic) and environment, we experiment with a static temperature and an
 exponentially decreasing temperature.
 
 Learning rates for this question are not divided by the number of tilings, since we were not
@@ -158,13 +147,13 @@ REINFORCE performed better than ActorCritic on CartPole-v1, achieving a mean rew
 value-based methods from Q1 as well. ActorCritic struggled to learn, achieving a mean reward of $\approx 25$,
 similar to the value-based methods.
 
-REINFORCE was entirely unable to learn MountainCar-v0, even with adjusted truncation step limit,
+REINFORCE was entirely unable to learn MountainCar-v0, even with an adjusted truncation step limit,
 achieving a mean reward of $\approx -500$. ActorCritic performed better, achieving similar
-results as the best performing value-based method, with a mean reward of $\approx -130$.
+results as the best-performing value-based method, with a mean reward of $\approx -130$.
 
 \subsection{Discussion}
 Overall, policy-based methods did not perform significantly better than value-based methods,
-with a minor exception on CartPole-v1 and REINFORCE showing a slight higher mean reward than
+with a minor exception on CartPole-v1 and REINFORCE showing a slightly higher mean reward than
 all other methods.
 
 We highlight a few points of the environments observed in the results: notably, the non-linearity of
@@ -180,7 +169,7 @@ stabilized at sub-100 rewards, which is considered low given that the problem is
 This is likely an indication that the environment is too complex for a linear
 approximation, particularly on states indicating a later part of the game.
 
-One useful observation is that the REINFORCE algorithm, performed marginally better
+One useful observation is that the REINFORCE algorithm performed marginally better
 than Actor-Critic, and methods from Q1 in the CartPole-v1 environment.
 This performance edge could likely be attributed to REINFORCE's strategy of learning from complete trajectories,
 allowing it to accumulate comprehensive experience from each episode.
@@ -188,9 +177,8 @@ This method of learning enables a more nuanced understanding of the cause-and-ef
 relationship between actions and their long-term outcomes.
 
 With these in mind, we conclude that linear approximation is sub-optimal
-for the CartPole-v1 environment, but algorithms of Monte-Carlo variants may be useful for the general learning.
-Future experiments should explore non-linear function approximation, perhaps with a focus on REINFORCE.
-
+for the CartPole-v1 environment, but algorithms of Monte-Carlo variants may be useful for general learning.
+Future experiments should explore non-linear function approximation, perhaps with a focus on reinforcement.
 
 \subsubsection{Monte-Carlo Methods and MountainCar-v0}
 We notice a severely poor performance of the Monte-Carlo method on MountainCar-v0,
@@ -198,10 +186,10 @@ despite achievements of decent rewards in the other methods of similar linear ap
 significantly more tuning and fine adjustments based on the nature of the environment,
 such as a specific decreasing temperature algorithm.
 
-This is unsurprising, notice that the environment's reward system state that
+This is unsurprising, notice that the environment's reward system states that
 for each step that the car is not at the flag, the environment returns a reward of -1.
 Given that Monte Carlo methods learned through an entire trajectory, a truncated
-episode would result in a reward that provide little to no information about a good path to
+episode would result in a reward that provides little to no information about a good path to
 reach the terminal state, as the algorithm learns from the \textbf{cumulative reward of completed episodes}.
 Intuitively, a decreasing temperature would be helpful for the model to reach the terminal state, and then learn from early success runs.
 But in practice, this has been extremely difficult to achieve, and the model has failed to learn
